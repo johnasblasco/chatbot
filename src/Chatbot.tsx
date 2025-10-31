@@ -60,7 +60,7 @@ const Chatbot = () => {
     return (
         <div className={`fixed bottom-6 right-6 transition-all duration-300 ease-in-out z-50 ${isHalfSize ? 'w-96 h-[500px]' : 'w-full h-full max-w-4xl max-h-[600px]'
             } ${isMinimized ? 'h-16' : ''}`}>
-            <div className="bg-white/95 backdrop-blur-sm shadow-2xl rounded-2xl w-full h-full flex flex-col border border-gray-200/50 overflow-hidden">
+            <div className="ml-5 bg-white/95 backdrop-blur-sm shadow-2xl rounded-2xl w-full h-full flex flex-col border border-gray-200/50 overflow-hidden">
 
                 {/* Header */}
                 <header className="bg-gradient-to-r from-purple-500 to-blue-500 flex justify-between items-center p-4 rounded-t-2xl">
