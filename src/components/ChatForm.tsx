@@ -1,68 +1,63 @@
-import { ChevronUp } from "lucide-react"
-import { useRef, useState } from "react"
+import { Send, Paperclip, Mic } from "lucide-react";
+import { useState } from "react";
 
 interface ChatFormProps {
-    setChatHistory: any;
-    chatHistory: any;
-    generateBotResponse: any;
+    chatHistory: any[];
+    setChatHistory: (history: any) => void;
+    generateBotResponse: (history: any) => void;
 }
 
 const ChatForm = ({ chatHistory, setChatHistory, generateBotResponse }: ChatFormProps) => {
-    const inputRef = useRef<HTMLInputElement>(null);
-    const [inputValue, setInputValue] = useState("");
+    const [input, setInput] = useState("");
 
-    const handleFormSubmit = (e: any) => {
+    const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault();
+        if (!input.trim()) return;
 
-        const userMessage = inputRef.current?.value.trim();
-        if (!userMessage) return;
+        const userMessage = { role: "user", text: input };
+        const thinkingMessage = { role: "model", text: "Thinking..." };
 
-        // Add user message
-        setChatHistory((history: any) => [
-            ...history,
-            { role: 'user', text: userMessage }
-        ]);
+        const newHistory = [...chatHistory, userMessage, thinkingMessage];
+        setChatHistory(newHistory);
+        setInput("");
 
-        // Add bot thinking message
-        setTimeout(() => {
-            setChatHistory((history: any) => [
-                ...history,
-                {
-                    role: 'model',
-                    text: `Thinking...`
-                }
-            ]);
-        }, 1000);
-
-        // Clear input and reset state
-        inputRef.current!.value = "";
-        setInputValue("");
-
-        // Generate bot response
-        generateBotResponse([...chatHistory, { role: 'user', text: userMessage }]);
-    }
-
-    const handleInputChange = (e: any) => {
-        setInputValue(e.target.value);
-    }
+        generateBotResponse([...chatHistory, userMessage]);
+    };
 
     return (
-        <form onSubmit={handleFormSubmit} className="flex border-4 p-2 w-full mx-4 rounded-full">
-            <input
-                ref={inputRef}
-                className="w-full focus:outline-0 ml-4"
-                type="text"
-                placeholder="Message..."
-                onChange={handleInputChange}
-                required
-            />
-            {inputValue.trim() && (
-                <button type="submit">
-                    <ChevronUp className="hover:scale-105 hover:cursor-pointer size-10 p-2 text-white bg-purple-500 rounded-full" />
-                </button>
-            )}
+        <form onSubmit={handleSubmit} className="flex gap-2">
+            <div className="flex-1 relative">
+                <input
+                    type="text"
+                    value={input}
+                    onChange={(e) => setInput(e.target.value)}
+                    placeholder="Type your message..."
+                    className="w-full pl-4 pr-12 py-3 border border-gray-300 rounded-2xl focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent bg-white/95 shadow-sm"
+                />
+                <div className="absolute right-2 top-1/2 transform -translate-y-1/2 flex gap-1">
+                    <button
+                        type="button"
+                        className="p-1.5 text-gray-400 hover:text-gray-600 transition-colors rounded-lg hover:bg-gray-100"
+                    >
+                        <Paperclip className="size-4" />
+                    </button>
+                    <button
+                        type="button"
+                        className="p-1.5 text-gray-400 hover:text-gray-600 transition-colors rounded-lg hover:bg-gray-100"
+                    >
+                        <Mic className="size-4" />
+                    </button>
+                </div>
+            </div>
+            <button
+                type="submit"
+                disabled={!input.trim()}
+                className="bg-gradient-to-r from-purple-500 to-blue-500 text-white p-3 rounded-2xl hover:shadow-lg transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed hover:scale-105 active:scale-95"
+            >
+                <Send className="size-5" />
+            </button>
         </form>
-    )
-}
+    );
+};
 
-export default ChatForm
+export default ChatForm;
