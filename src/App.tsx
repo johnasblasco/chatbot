@@ -1,4 +1,4 @@
-import Chatbot from "./chatbot"
+import Chatbot from "./Chatbot"
 
 const App = () => {
     return (
